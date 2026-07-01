@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drive Data Website</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="เว็บไซต์ตัวอย่างที่ใช้ Google Drive / Google Sheets ผ่าน Google Apps Script เป็นฐานเก็บข้อมูล" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <div class="brand">
+        <span class="logo">D</span>
+        <div>
+          <strong>Drive Data Website</strong>
+          <small>GitHub Pages + Google Drive Database</small>
+        </div>
+      </div>
+      <a class="nav-link" href="#setup">ตั้งค่าฐานข้อมูล</a>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">ระบบเก็บข้อมูลออนไลน์</p>
+        <h1>เว็บบันทึกข้อมูลที่ใช้ Google Drive เป็นฐานเก็บข้อมูล</h1>
+        <p class="hero-text">
+          ตัวเว็บอยู่บน GitHub Pages ส่วนข้อมูลถูกเก็บใน Google Sheets ที่อยู่ใน Google Drive
+          โดยใช้ Google Apps Script เป็นตัวกลางรับ–ส่งข้อมูล
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#form-section">เพิ่มข้อมูล</a>
+          <button class="button ghost" id="refreshBtn" type="button">โหลดข้อมูลใหม่</button>
+        </div>
+      </div>
+      <div class="hero-card">
+        <span>สถานะการเชื่อมต่อ</span>
+        <strong id="connectionStatus">ยังไม่ได้ตั้งค่า</strong>
+        <p id="connectionHint">เพิ่ม Apps Script Web App URL เพื่อเชื่อม Google Drive</p>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="stats-grid" aria-label="สรุปข้อมูล">
+      <article class="stat-card">
+        <span>รายการทั้งหมด</span>
+        <strong id="totalRecords">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>หมวดหมู่</span>
+        <strong id="totalCategories">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>อัปเดตล่าสุด</span>
+        <strong id="lastUpdated">-</strong>
+      </article>
+    </section>
+
+    <section id="setup" class="panel setup-panel">
+      <div>
+        <p class="eyebrow">Setup</p>
+        <h2>ตั้งค่า Google Apps Script Web App URL</h2>
+        <p>
+          หลังจากนำโค้ดใน <code>google-apps-script/Code.gs</code> ไป Deploy แล้ว ให้นำ Web App URL มาวางตรงนี้
+          ระบบจะบันทึก URL ไว้ในเครื่องนี้ด้วย LocalStorage
+        </p>
+      </div>
+      <form id="configForm" class="config-form">
+        <label for="scriptUrl">Apps Script Web App URL</label>
+        <input id="scriptUrl" name="scriptUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
+        <button class="button primary" type="submit">บันทึก URL</button>
+      </form>
+    </section>
+
+    <section class="content-grid">
+      <section id="form-section" class="panel">
+        <p class="eyebrow">Create</p>
+        <h2>เพิ่มข้อมูลใหม่</h2>
+        <form id="recordForm" class="record-form">
+          <label>
+            ชื่อรายการ
+            <input name="title" required maxlength="120" placeholder="เช่น คะแนนแบบฝึกหัด / รายชื่อลูกค้า / งานที่ต้องทำ" />
+          </label>
+          <label>
+            หมวดหมู่
+            <input name="category" required maxlength="80" placeholder="เช่น งาน, นักเรียน, การเงิน" />
+          </label>
+          <label>
+            ผู้รับผิดชอบ
+            <input name="owner" maxlength="80" placeholder="ชื่อผู้รับผิดชอบ" />
+          </label>
+          <label>
+            สถานะ
+            <select name="status">
+              <option value="ใหม่">ใหม่</option>
+              <option value="กำลังดำเนินการ">กำลังดำเนินการ</option>
+              <option value="เสร็จแล้ว">เสร็จแล้ว</option>
+            </select>
+          </label>
+          <label class="full-width">
+            รายละเอียด
+            <textarea name="description" rows="5" maxlength="1000" placeholder="รายละเอียดเพิ่มเติม"></textarea>
+          </label>
+          <button class="button primary full-width" type="submit">บันทึกลง Google Drive</button>
+        </form>
+        <p class="form-note" id="formMessage"></p>
+      </section>
+
+      <section class="panel">
+        <div class="records-header">
+          <div>
+            <p class="eyebrow">Read</p>
+            <h2>ข้อมูลล่าสุด</h2>
+          </div>
+          <input id="searchInput" class="search-input" type="search" placeholder="ค้นหา..." />
+        </div>
+        <div id="recordsList" class="records-list" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Built for GitHub Pages. Data backend: Google Apps Script + Google Sheets in Google Drive.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
